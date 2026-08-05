@@ -1,0 +1,56 @@
+import type { ComponentType } from "react";
+export type NavigationItem = { label: string; href: string; icon: ComponentType<{ className?: string }> };
+export type StatusTone = "neutral" | "success" | "warning" | "danger" | "info";
+
+export type IdeaStatus = "جديدة" | "بانتظار المراجعة" | "تحتاج استكمال" | "قيد التقييم" | "جاهزة للتوصية" | "تم رفع التوصية" | "معادة للمراجعة";
+export type IdeaPriority = "منخفضة" | "متوسطة" | "عالية" | "عاجلة";
+
+export type IdeaListItem = {
+  id: string;
+  title: string;
+  innovator: string;
+  innovatorType: "فرد" | "فريق ابتكار";
+  category: string;
+  status: IdeaStatus;
+  priority: IdeaPriority;
+  assignedToMe: boolean;
+  assignedDate: string;
+  submittedDate: string;
+  lastUpdated: string;
+};
+
+export type EvaluationStatus = "مسودة" | "قيد التقييم" | "جاهزة للتوصية" | "تم رفع التوصية" | "معادة للمراجعة";
+
+export type EvaluationListItem = {
+  id: string;
+  title: string;
+  innovator: string;
+  category: string;
+  status: EvaluationStatus;
+  priority: IdeaPriority;
+  averageScore: number | null;
+  completion: 25 | 50 | 75 | 100;
+  lastUpdated: string;
+  updatePeriod: "today" | "week" | "month";
+  dueDate: string;
+  urgent: boolean;
+};
+
+export type ProjectStatus = "قيد التخطيط" | "قيد التنفيذ" | "متعثر" | "معلق" | "مكتمل";
+
+export type ProjectListItem = {
+  id: string;
+  name: string;
+  ideaId: string;
+  ideaTitle: string;
+  manager: string;
+  phase: string;
+  status: ProjectStatus;
+  priority: IdeaPriority;
+  completion: number;
+  openRequirements: number;
+  lastUpdate: string;
+  updatePeriod: "today" | "week" | "older";
+  action: "عرض المشروع" | "متابعة المتطلبات" | "إضافة تحديث" | "مراجعة الجدول الزمني";
+  attentionReason?: string;
+};
