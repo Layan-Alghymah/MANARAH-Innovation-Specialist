@@ -10,7 +10,7 @@ The Innovation Specialist module is an Arabic RTL operational workspace for a sp
 - Evaluate ideas against structured criteria.
 - Add evaluation notes and supporting attachments.
 - Submit operational recommendations to the Organization Manager.
-- Follow approved projects that originated from reviewed ideas or were assigned to the specialist.
+- Follow approved projects explicitly assigned to the specialist for follow-up.
 
 The role is deliberately non-decisional. It cannot:
 
@@ -29,10 +29,9 @@ The standalone implementation is frontend-only and uses local mock data and loca
 | Route | Purpose |
 | --- | --- |
 | `/innovation-specialist/dashboard` | Daily operational summary: assigned ideas, required actions, recent assignments, notifications, and followed projects. |
-| `/innovation-specialist/ideas` | Searchable and filterable inventory of organization ideas, with emphasis on ideas assigned to the specialist. |
+| `/innovation-specialist/ideas` | Searchable and filterable work queue containing only ideas assigned to the current Innovation Specialist. |
 | `/innovation-specialist/ideas/[id]` | Main idea review workspace with overview, evaluation, communication/information requests, and recommendation tabs. |
-| `/innovation-specialist/evaluations` | Central queue for draft, active, completed, returned, and recommendation-ready evaluations. |
-| `/innovation-specialist/projects` | Searchable project follow-up queue with urgent-attention cards and operational project filters. |
+| `/innovation-specialist/projects` | Searchable queue containing only projects explicitly assigned to the current specialist for follow-up. |
 | `/innovation-specialist/projects/[id]` | Project follow-up workspace for requirements, timeline, updates, attachments, stakeholders, and activity history. |
 | `/innovation-specialist/reports` | Working operational analytics for workload, pipeline progress, performance, categories, monthly activity, and recent work. |
 | `/innovation-specialist/notifications` | Action inbox for idea, evaluation, recommendation, project, and system notifications. |
@@ -56,7 +55,6 @@ The standalone root route `/` is a mock login screen. It is not part of the role
 - `app/innovation-specialist/dashboard/page.tsx`
 - `app/innovation-specialist/ideas/page.tsx`
 - `app/innovation-specialist/ideas/[id]/page.tsx`
-- `app/innovation-specialist/evaluations/page.tsx`
 - `app/innovation-specialist/projects/page.tsx`
 - `app/innovation-specialist/projects/[id]/page.tsx`
 - `app/innovation-specialist/reports/page.tsx`
@@ -67,7 +65,6 @@ The standalone root route `/` is a mock login screen. It is not part of the role
 
 - `app/innovation-specialist/ideas/ideas-client.tsx`
 - `app/innovation-specialist/ideas/[id]/idea-details-client.tsx`
-- `app/innovation-specialist/evaluations/evaluations-client.tsx`
 - `app/innovation-specialist/projects/projects-client.tsx`
 - `app/innovation-specialist/projects/[id]/project-details-client.tsx`
 - `app/innovation-specialist/reports/reports-client.tsx`
@@ -196,14 +193,13 @@ No chart library is required; the reports chart uses responsive HTML/CSS bars.
 | Current mock source | Future backend/domain replacement |
 | --- | --- |
 | `dashboardKpis`, `dashboardTasks`, `recentlyAssignedIdeas`, `dashboardNotifications` | Specialist dashboard aggregate endpoint: counts, due work items, recent assignments, and recent notifications scoped to authenticated specialist and organization. |
-| `ideas` | Paginated organization idea search response with assignment, innovator summary, category, workflow status, priority, dates, and permissions. |
+| `assignedIdeas` | Paginated, server-authorized idea work queue for the current specialist, including innovator summary, category, workflow status, priority, and dates. The frontend mock projection must be replaced by an RBAC-enforced response. |
 | `ideaDetailsMock` core fields | Idea detail entity including problem, solution, impact, scope, category, strategic objectives, beneficiary, metadata, and status history. |
 | `ideaDetailsMock.innovator` | Innovator/profile service response with organization membership and aggregate innovation history. |
 | `ideaDetailsMock.requests` | Information-request entities, requested documents, responses, response attachments, due dates, and status. |
 | Idea evaluation state in `idea-details-client.tsx` | Evaluation entity, criterion definitions, scores, criterion comments, overall notes, draft/completion state, and evaluation attachments. |
 | Recommendation state in `idea-details-client.tsx` | Recommendation entity with strengths, challenges, risks, recommendation enum, justification, attachments, submitted timestamp, and recipient. |
-| `evaluations` | Paginated specialist evaluation queue with completion, average score, due date, status, priority, and urgency. |
-| `projects` | Paginated followed/assigned project response with originating idea, manager, phase, status, progress, requirements count, and update metadata. |
+| `assignedProjects` | Paginated, server-authorized project follow-up queue for the current specialist, with originating idea, project manager, phase, status, progress, requirements count, and update metadata. Replace the frontend mock projection with an RBAC-enforced response. |
 | `projectDetailsMock.requirements` | Project requirement entities with assignee, status, priority, due date, and description. |
 | `projectDetailsMock.milestones` | Project timeline/milestone entities with planned dates and current status. |
 | `projectDetailsMock.updates` | Project update/activity-post entities with author, date, text, and attachments. |
@@ -226,10 +222,9 @@ Types currently declared in `types/index.ts`:
 | `IdeaStatus` | Shared domain type | Ideas domain package/API contract. |
 | `IdeaPriority` | Shared domain type | Shared workflow/common domain package. |
 | `IdeaListItem` | Module/API view model | Ideas list response/view-model package. |
-| `EvaluationStatus` | Shared domain type | Evaluation domain package/API contract. |
-| `EvaluationListItem` | Module/API view model | Specialist evaluation queue response. |
 | `ProjectStatus` | Shared domain type | Projects domain package/API contract. |
-| `ProjectListItem` | Module/API view model | Followed-project list response/view model. |
+| `ProjectListItem` | Shared domain/view type | Project data, including the distinct project-manager field. |
+| `ProjectFollowUpAssignment` | Module/API relation | Assignment of an Innovation Specialist to follow a project; it must remain separate from project management ownership. |
 
 Route-local types currently embedded in client files include notification items, information requests, requirements, milestones, project updates, attachments, activities, filters, and form state. Promote request/requirement/milestone/attachment entities to shared domain types when real API contracts exist. Keep purely presentational filter keys and draft-form shapes local.
 
@@ -354,4 +349,3 @@ Additional integration limitations:
 - Project and idea activity logs are mock/local, not immutable audit records.
 - Report calculations are static examples.
 - File previews and downloads are illustrative only.
-

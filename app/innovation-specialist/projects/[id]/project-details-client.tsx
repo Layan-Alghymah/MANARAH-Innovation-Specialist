@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, CalendarDays, Check, Clock3, Download, Eye, FileText, History, Link2, Paperclip, Pencil, Plus, Send, Trash2, UserRound } from "lucide-react";
 import { Button, Card, ConfirmDialog, FormField, Modal, priorityTones, Progress, projectStatusTones, StatusBadge, Tabs } from "@/components";
-import { projectDetailsMock, projects } from "@/mock-data";
+import { assignedProjects, projectDetailsMock } from "@/mock-data";
 import type { IdeaPriority, ProjectStatus, StatusTone } from "@/types";
 
 const tabs = ["نظرة عامة", "المتطلبات", "الجدول الزمني", "التحديثات", "المرفقات", "سجل النشاط"];
@@ -29,7 +29,7 @@ function Detail({ label, children }: { label: string; children: React.ReactNode 
 }
 
 export function ProjectDetailsClient({ id }: { id: string }) {
-  const listProject = projects.find(project => project.id === id) ?? projects[0];
+  const listProject = assignedProjects.find(project => project.id === id) ?? assignedProjects[0];
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [projectStatus, setProjectStatus] = useState<ProjectStatus>(listProject.status);
   const [requirements, setRequirements] = useState<Requirement[]>(projectDetailsMock.requirements.map(item => ({ ...item })));

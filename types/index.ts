@@ -13,30 +13,32 @@ export type IdeaListItem = {
   category: string;
   status: IdeaStatus;
   priority: IdeaPriority;
-  assignedToMe: boolean;
+  organizationId: string;
+  assignedSpecialistId: string;
   assignedDate: string;
   submittedDate: string;
   lastUpdated: string;
 };
 
-export type EvaluationStatus = "مسودة" | "قيد التقييم" | "جاهزة للتوصية" | "تم رفع التوصية" | "معادة للمراجعة";
-
-export type EvaluationListItem = {
-  id: string;
+export type IdeaSubmissionDetails = {
   title: string;
-  innovator: string;
+  receivingOrganization: string;
   category: string;
-  status: EvaluationStatus;
-  priority: IdeaPriority;
-  averageScore: number | null;
-  completion: 25 | 50 | 75 | 100;
-  lastUpdated: string;
-  updatePeriod: "today" | "week" | "month";
-  dueDate: string;
-  urgent: boolean;
+  description: string;
+  problem: string;
+  solution: string;
+  expectedImpact: string;
+  attachments: readonly string[];
 };
 
 export type ProjectStatus = "قيد التخطيط" | "قيد التنفيذ" | "متعثر" | "معلق" | "مكتمل";
+
+export type ProjectFollowUpAssignment = {
+  projectId: string;
+  organizationId: string;
+  specialistId: string;
+  assignedDate: string;
+};
 
 export type ProjectListItem = {
   id: string;
